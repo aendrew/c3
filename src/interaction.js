@@ -229,13 +229,13 @@ c3_chart_internal_fn.generateEventRectsForSingleX = function (eventRectEnter) {
                     $$.config.data_onclick.call($$.api, d, this);
                 }
             });
-        })
-        .call(
-            d3.behavior.drag().origin(Object)
-                .on('drag', function () { $$.drag(d3.mouse(this)); })
-                .on('dragstart', function () { $$.dragstart(d3.mouse(this)); })
-                .on('dragend', function () { $$.dragend(); })
-        );
+        });
+        // .call( // Disabled in aendrew/c3#no_ondrag for axisJS v1.0.0. See times/axisJS#46
+        //     d3.behavior.drag().origin(Object)
+        //         .on('drag', function () { $$.drag(d3.mouse(this)); })
+        //         .on('dragstart', function () { $$.dragstart(d3.mouse(this)); })
+        //         .on('dragend', function () { $$.dragend(); })
+        // );
 };
 
 c3_chart_internal_fn.generateEventRectsForMultipleXs = function (eventRectEnter) {
