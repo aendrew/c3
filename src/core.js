@@ -319,20 +319,7 @@ c3_chart_internal_fn.initWithData = function (data) {
     }
 
     // Bind resize event
-    if (window.onresize == null) {
-        window.onresize = $$.generateResize();
-    }
-    if (window.onresize.add) {
-        window.onresize.add(function () {
-            config.onresize.call($$);
-        });
-        window.onresize.add(function () {
-            $$.api.flush();
-        });
-        window.onresize.add(function () {
-            config.onresized.call($$);
-        });
-    }
+    $$.bindResize();
 
     // export element of the chart
     $$.api.element = $$.selectChart.node();
@@ -927,6 +914,48 @@ c3_chart_internal_fn.observeInserted = function (selection) {
     observer.observe(selection.node(), {attributes: true, childList: true, characterData: true});
 };
 
+c3_chart_internal_fn.bindResize = function () {
+    var $$ = this, config = $$.config;
+
+    $$.resizeFunction = $$.generateResize();
+
+    $$.resizeFunction.add(function () {
+        config.onresize.call($$);
+    });
+    if (config.resize_auto) {
+        $$.resizeFunction.add(function () {
+            if (config.resize_timeout) {
+                if ($$.resizeTimeout !== undefined) {
+                    window.clearTimeout($$.resizeTimeout);
+                }
+                $$.resizeTimeout = window.setTimeout(function () {
+                    delete $$.resizeTimeout;
+                    $$.api.flush();
+                }, config.resize_timeout);
+            } else {
+                $$.api.flush();
+            }
+        });
+    }
+    $$.resizeFunction.add(function () {
+        config.onresized.call($$);
+    });
+
+    if (window.attachEvent) {
+        window.attachEvent('onresize', $$.resizeFunction);
+    } else if (window.addEventListener) {
+        window.addEventListener('resize', $$.resizeFunction, false);
+    } else {
+        // fallback to this, if this is a very old browser
+        $$.originalResize = window.onresize;
+        window.onresize = function () {
+            if ($$.originalResize) {
+                $$.originalResize();
+            }
+            $$.resizeFunction();
+        };
+    }
+};
 
 c3_chart_internal_fn.generateResize = function () {
     var resizeFunctions = [];

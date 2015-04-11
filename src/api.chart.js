@@ -14,7 +14,18 @@ c3_chart_fn.destroy = function () {
     var $$ = this.internal;
 
     window.clearInterval($$.intervalForObserveInserted);
-    window.onresize = null;
+
+    if ($$.resizeTimeout !== undefined) {
+        window.clearTimeout($$.resizeTimeout);
+    }
+
+    if (window.detachEvent) {
+        window.detachEvent('onresize', $$.resizeFunction);
+    } else if (window.removeEventListener) {
+        window.removeEventListener('resize', $$.resizeFunction);
+    } else {
+        window.onresize = $$.originalResize;
+    }
 
     $$.selectChart.classed('c3', false).html("");
 
