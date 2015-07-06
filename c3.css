@@ -1,7 +1,7 @@
 /*-- Chart --*/
 .c3 svg {
   font: 10px sans-serif;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+  -webkit-tap-highlight-color: transparent; }
 
 .c3 path, .c3 line {
   fill: none;
@@ -71,11 +71,11 @@
 /*-- Region --*/
 .c3-region {
   fill: steelblue;
-  fill-opacity: 0.1; }
+  fill-opacity: .1; }
 
 /*-- Brush --*/
 .c3-brush .extent {
-  fill-opacity: 0.1; }
+  fill-opacity: .1; }
 
 /*-- Select - Drag --*/
 /*-- Legend --*/
@@ -94,6 +94,12 @@
 /*-- Title --*/
 .c3-title {
   font: 14px sans-serif; }
+
+.c3-title-author {
+  font-weight: bold; }
+
+.c3-title-source {
+  font-style: italic; }
 
 /*-- Tooltip --*/
 .c3-tooltip-container {
