@@ -208,7 +208,7 @@ declare module "c3" {
                 grouped: boolean;
                 format: {
                     title: (x: number) => string | number;
-                    name: (name: string, ratio?: number|None, id?: string, idx?: number) => string;
+                    name: (name: string, ratio?: number, id?: string, idx?: number) => string;
                 }
             }
         }
