@@ -9,24 +9,6 @@ var c3_chart_fn,
     c3_chart_internal_fn,
     c3_chart_internal_axis_fn;
 
-function API(owner) {
-    this.owner = owner;
-}
-
-function inherit(base, derived) {
-    if (Object.create) {
-        derived.prototype = Object.create(base.prototype);
-    } else {
-        var f = function f() {};
-        f.prototype = base.prototype;
-        derived.prototype = new f();
-    }
-
-    derived.prototype.constructor = derived;
-
-    return derived;
-}
-
 function Chart(config) {
     var $$ = this.internal = new ChartInternal(this);
     $$.loadConfig(config);
@@ -92,6 +74,46 @@ _.assign(c3_chart_internal_fn, require('./type'));
 _.assign(c3_chart_internal_fn, require('./grid'));
 _.assign(c3_chart_internal_fn, require('./tooltip'));
 _.assign(c3_chart_internal_fn, require('./legend'));
+_.assign(c3_chart_internal_fn, require('./title'));
+
+var Axis = require('./axis');
+
+_.assign(c3_chart_internal_fn, require('./clip'));
+_.assign(c3_chart_internal_fn, require('./arc'));
+_.assign(c3_chart_internal_fn, require('./region'));
+_.assign(c3_chart_internal_fn, require('./drag'));
+_.assign(c3_chart_internal_fn, require('./selection'));
+_.assign(c3_chart_internal_fn, require('./subchart'));
+_.assign(c3_chart_internal_fn, require('./zoom'));
+_.assign(c3_chart_internal_fn, require('./color'));
+_.assign(c3_chart_internal_fn, require('./format'));
+_.assign(c3_chart_internal_fn, require('./cache'));
+_.assign(c3_chart_internal_fn, require('./class'));
+_.assign(c3_chart_internal_fn, require('./util'));
+
+// Public API
+_.assign(c3_chart_fn, require('./api.focus'));
+_.assign(c3_chart_fn, require('./api.show'));
+_.assign(c3_chart_fn, require('./api.zoom'));
+_.assign(c3_chart_fn, require('./api.load'));
+_.assign(c3_chart_fn, require('./api.flow').public);
+_.assign(c3_chart_internal_fn, require('./api.flow').private); // This is a bit weird in API.flow. Consider splitting.
+_.assign(c3_chart_fn, require('./api.selection'));
+_.assign(c3_chart_fn, require('./api.transform').public);
+_.assign(c3_chart_internal_fn, require('./api.transform').private); // This is a bit weird in API.transform. Consider splitting.
+_.assign(c3_chart_fn, require('./api.groups'));
+_.assign(c3_chart_fn, require('./api.grid'));
+_.assign(c3_chart_fn, require('./api.data'));
+_.assign(c3_chart_fn, require('./api.color'));
+_.assign(c3_chart_fn, require('./api.x'));
+_.assign(c3_chart_fn, require('./api.axis'));
+_.assign(c3_chart_fn, require('./api.legend'));
+_.assign(c3_chart_fn, require('./api.chart'));
+_.assign(c3_chart_fn, require('./api.tooltip'));
+
+var c3_axis = require('./c3.axis'); // This is a really weird file; consider merging into axis.js
+
+_.assign(c3_chart_internal_fn, require('./ua'));
 
 
 module.exports = c3;

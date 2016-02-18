@@ -1,4 +1,5 @@
 var type = {};
+var isString = require('./util').isString;
 
 type.setTargetType = function (targetIds, type) {
     var $$ = this, config = $$.config;

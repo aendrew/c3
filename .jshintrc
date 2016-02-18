@@ -2,14 +2,13 @@
     "bitwise": true,
     "eqeqeq": true,
     "curly": true,
-    "strict": true,
+    "strict": false, // This might be a bad idea.
     "trailing": true,
     "white": true,
     "maxlen": 210,
     "undef": true,
     "unused": true,
     "indent": 4,
-
     "eqnull": true,
     "expr": true,
     "newcap": false,
@@ -17,15 +16,14 @@
     "bitwise": false,
 
     "browser": true,
-
+    "node": true,
     "globals": {
         "jasmine": false,
         "describe": false,
         "beforeEach": false,
         "beforeAll": false,
         "it": false,
-        "expect": false,
-        "d3": false
+        "expect": false
     }
 
 }

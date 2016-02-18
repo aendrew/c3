@@ -1,4 +1,6 @@
 'use strict';
+var isDefined = require('./util').isDefined;
+
 
 module.exports = {
     getDefaultConfig: function () {
@@ -255,4 +257,4 @@ module.exports = {
             }
         });
     }
-}
+};

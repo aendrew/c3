@@ -1,4 +1,8 @@
 var tooltip = {};
+var CLASS = require('./class');
+var utils = require('./util');
+var isString = utils.isString;
+var isValue = utils.isValue;
 
 tooltip.initTooltip = function () {
     var $$ = this, config = $$.config, i;

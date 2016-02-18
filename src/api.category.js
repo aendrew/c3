@@ -1,4 +1,6 @@
-c3_chart_fn.category = function (i, category) {
+var APIcategory = {};
+
+APIcategory.category = function (i, category) {
     var $$ = this.internal, config = $$.config;
     if (arguments.length > 1) {
         config.axis_x_categories[i] = category;
@@ -6,10 +8,12 @@ c3_chart_fn.category = function (i, category) {
     }
     return config.axis_x_categories[i];
 };
-c3_chart_fn.categories = function (categories) {
+APIcategory.categories = function (categories) {
     var $$ = this.internal, config = $$.config;
     if (!arguments.length) { return config.axis_x_categories; }
     config.axis_x_categories = categories;
     $$.redraw();
     return config.axis_x_categories;
 };
+
+module.exports = APIcategory;

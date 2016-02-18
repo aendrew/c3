@@ -1,4 +1,8 @@
-c3_chart_internal_fn.initBrush = function () {
+var CLASS = require('./class');
+var isFunction = require('./util').isFunction;
+var subchart = {};
+
+subchart.initBrush = function () {
     var $$ = this, d3 = $$.d3;
     $$.brush = d3.svg.brush().on("brush", function () { $$.redrawForBrush(); });
     $$.brush.update = function () {
@@ -9,7 +13,7 @@ c3_chart_internal_fn.initBrush = function () {
         return $$.config.axis_rotated ? this.y(scale) : this.x(scale);
     };
 };
-c3_chart_internal_fn.initSubchart = function () {
+subchart.initSubchart = function () {
     var $$ = this, config = $$.config,
         context = $$.context = $$.svg.append("g").attr("transform", $$.getTranslate('context')),
         visibility = config.subchart_show ? 'visible' : 'hidden';
@@ -43,7 +47,7 @@ c3_chart_internal_fn.initSubchart = function () {
         .attr("clip-path", config.axis_rotated ? "" : $$.clipPathForXAxis)
         .style("visibility", config.subchart_axis_x_show ? visibility : 'hidden');
 };
-c3_chart_internal_fn.updateTargetsForSubchart = function (targets) {
+subchart.updateTargetsForSubchart = function (targets) {
     var $$ = this, context = $$.context, config = $$.config,
         contextLineEnter, contextLineUpdate, contextBarEnter, contextBarUpdate,
         classChartBar = $$.classChartBar.bind($$),
@@ -83,7 +87,7 @@ c3_chart_internal_fn.updateTargetsForSubchart = function (targets) {
             .attr(config.axis_rotated ? "width" : "height", config.axis_rotated ? $$.width2 : $$.height2);
     }
 };
-c3_chart_internal_fn.updateBarForSubchart = function (durationForExit) {
+subchart.updateBarForSubchart = function (durationForExit) {
     var $$ = this;
     $$.contextBar = $$.context.selectAll('.' + CLASS.bars).selectAll('.' + CLASS.bar)
         .data($$.barData.bind($$));
@@ -97,12 +101,12 @@ c3_chart_internal_fn.updateBarForSubchart = function (durationForExit) {
         .style('opacity', 0)
         .remove();
 };
-c3_chart_internal_fn.redrawBarForSubchart = function (drawBarOnSub, withTransition, duration) {
+subchart.redrawBarForSubchart = function (drawBarOnSub, withTransition, duration) {
     (withTransition ? this.contextBar.transition(Math.random().toString()).duration(duration) : this.contextBar)
         .attr('d', drawBarOnSub)
         .style('opacity', 1);
 };
-c3_chart_internal_fn.updateLineForSubchart = function (durationForExit) {
+subchart.updateLineForSubchart = function (durationForExit) {
     var $$ = this;
     $$.contextLine = $$.context.selectAll('.' + CLASS.lines).selectAll('.' + CLASS.line)
         .data($$.lineData.bind($$));
@@ -115,12 +119,12 @@ c3_chart_internal_fn.updateLineForSubchart = function (durationForExit) {
         .style('opacity', 0)
         .remove();
 };
-c3_chart_internal_fn.redrawLineForSubchart = function (drawLineOnSub, withTransition, duration) {
+subchart.redrawLineForSubchart = function (drawLineOnSub, withTransition, duration) {
     (withTransition ? this.contextLine.transition(Math.random().toString()).duration(duration) : this.contextLine)
         .attr("d", drawLineOnSub)
         .style('opacity', 1);
 };
-c3_chart_internal_fn.updateAreaForSubchart = function (durationForExit) {
+subchart.updateAreaForSubchart = function (durationForExit) {
     var $$ = this, d3 = $$.d3;
     $$.contextArea = $$.context.selectAll('.' + CLASS.areas).selectAll('.' + CLASS.area)
         .data($$.lineData.bind($$));
@@ -134,13 +138,13 @@ c3_chart_internal_fn.updateAreaForSubchart = function (durationForExit) {
         .style('opacity', 0)
         .remove();
 };
-c3_chart_internal_fn.redrawAreaForSubchart = function (drawAreaOnSub, withTransition, duration) {
+subchart.redrawAreaForSubchart = function (drawAreaOnSub, withTransition, duration) {
     (withTransition ? this.contextArea.transition(Math.random().toString()).duration(duration) : this.contextArea)
         .attr("d", drawAreaOnSub)
         .style("fill", this.color)
         .style("opacity", this.orgAreaOpacity);
 };
-c3_chart_internal_fn.redrawSubchart = function (withSubchart, transitions, duration, durationForExit, areaIndices, barIndices, lineIndices) {
+subchart.redrawSubchart = function (withSubchart, transitions, duration, durationForExit, areaIndices, barIndices, lineIndices) {
     var $$ = this, d3 = $$.d3, config = $$.config,
         drawAreaOnSub, drawBarOnSub, drawLineOnSub;
 
@@ -174,7 +178,7 @@ c3_chart_internal_fn.redrawSubchart = function (withSubchart, transitions, durat
         }
     }
 };
-c3_chart_internal_fn.redrawForBrush = function () {
+subchart.redrawForBrush = function () {
     var $$ = this, x = $$.x;
     $$.redraw({
         withTransition: false,
@@ -185,7 +189,7 @@ c3_chart_internal_fn.redrawForBrush = function () {
     });
     $$.config.subchart_onbrush.call($$.api, x.orgDomain());
 };
-c3_chart_internal_fn.transformContext = function (withTransition, transitions) {
+subchart.transformContext = function (withTransition, transitions) {
     var $$ = this, subXAxis;
     if (transitions && transitions.axisSubX) {
         subXAxis = transitions.axisSubX;
@@ -196,7 +200,7 @@ c3_chart_internal_fn.transformContext = function (withTransition, transitions) {
     $$.context.attr("transform", $$.getTranslate('context'));
     subXAxis.attr("transform", $$.getTranslate('subx'));
 };
-c3_chart_internal_fn.getDefaultExtent = function () {
+subchart.getDefaultExtent = function () {
     var $$ = this, config = $$.config,
         extent = isFunction(config.axis_x_extent) ? config.axis_x_extent($$.getXDomain($$.data.targets)) : config.axis_x_extent;
     if ($$.isTimeSeries()) {
@@ -204,3 +208,5 @@ c3_chart_internal_fn.getDefaultExtent = function () {
     }
     return extent;
 };
+
+module.exports = subchart;

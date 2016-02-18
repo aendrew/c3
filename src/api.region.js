@@ -1,18 +1,21 @@
-c3_chart_fn.regions = function (regions) {
+var APIregions = {};
+var CLASS = require('./class');
+
+APIregions.regions = function (regions) {
     var $$ = this.internal, config = $$.config;
     if (!regions) { return config.regions; }
     config.regions = regions;
     $$.redrawWithoutRescale();
     return config.regions;
 };
-c3_chart_fn.regions.add = function (regions) {
+APIregions.regions.add = function (regions) {
     var $$ = this.internal, config = $$.config;
     if (!regions) { return config.regions; }
     config.regions = config.regions.concat(regions);
     $$.redrawWithoutRescale();
     return config.regions;
 };
-c3_chart_fn.regions.remove = function (options) {
+APIregions.regions.remove = function (options) {
     var $$ = this.internal, config = $$.config,
         duration, classes, regions;
 
@@ -38,3 +41,5 @@ c3_chart_fn.regions.remove = function (options) {
 
     return config.regions;
 };
+
+module.exports = APIregions;

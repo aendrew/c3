@@ -1,4 +1,5 @@
 var text = {};
+var CLASS = require('./class');
 
 text.initText = function () {
     var $$ = this;

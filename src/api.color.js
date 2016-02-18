@@ -1,5 +1,9 @@
+var APIcolor = {};
+
 // TODO: fix
-c3_chart_fn.color = function (id) {
+APIcolor.color = function (id) {
     var $$ = this.internal;
     return $$.color(id); // more patterns
 };
+
+module.exports = APIcolor;
