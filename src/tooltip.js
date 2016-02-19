@@ -1,5 +1,5 @@
 var tooltip = {};
-var CLASS = require('./class');
+var CLASS = require('./class'); // N.b., I changed `$$.CLASS` to just `CLASS`. This may break something.
 var utils = require('./util');
 var isString = utils.isString;
 var isValue = utils.isValue;
@@ -60,7 +60,7 @@ tooltip.getTooltipContent = function (d, defaultTitleFormat, defaultValueFormat,
 
         if (! text) {
             title = titleFormat ? titleFormat(d[i].x) : d[i].x;
-            text = "<table class='" + $$.CLASS.tooltip + "'>" + (title || title === 0 ? "<tr><th colspan='2'>" + title + "</th></tr>" : "");
+            text = "<table class='" + CLASS.tooltip + "'>" + (title || title === 0 ? "<tr><th colspan='2'>" + title + "</th></tr>" : "");
         }
 
         value = valueFormat(d[i].value, d[i].ratio, d[i].id, d[i].index, d);
@@ -70,7 +70,7 @@ tooltip.getTooltipContent = function (d, defaultTitleFormat, defaultValueFormat,
             name = nameFormat(d[i].name, d[i].ratio, d[i].id, d[i].index);
             bgcolor = $$.levelColor ? $$.levelColor(d[i].value) : color(d[i].id);
 
-            text += "<tr class='" + $$.CLASS.tooltipName + "-" + $$.getTargetSelectorSuffix(d[i].id) + "'>";
+            text += "<tr class='" + CLASS.tooltipName + "-" + $$.getTargetSelectorSuffix(d[i].id) + "'>";
             text += "<td class='name'><span style='background-color:" + bgcolor + "'></span>" + name + "</td>";
             text += "<td class='value'>" + value + "</td>";
             text += "</tr>";
