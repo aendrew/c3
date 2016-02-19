@@ -1,4 +1,7 @@
-c3_chart_fn.focus = function (targetIds) {
+var APIfocus = {};
+var CLASS = require('./class');
+
+APIfocus.focus = function (targetIds) {
     var $$ = this.internal, candidates;
 
     targetIds = $$.mapToTargetIds(targetIds);
@@ -18,7 +21,7 @@ c3_chart_fn.focus = function (targetIds) {
     });
 };
 
-c3_chart_fn.defocus = function (targetIds) {
+APIfocus.defocus = function (targetIds) {
     var $$ = this.internal, candidates;
 
     targetIds = $$.mapToTargetIds(targetIds);
@@ -36,7 +39,7 @@ c3_chart_fn.defocus = function (targetIds) {
     $$.defocusedTargetIds = targetIds;
 };
 
-c3_chart_fn.revert = function (targetIds) {
+APIfocus.revert = function (targetIds) {
     var $$ = this.internal, candidates;
 
     targetIds = $$.mapToTargetIds(targetIds);
@@ -58,3 +61,5 @@ c3_chart_fn.revert = function (targetIds) {
     $$.focusedTargetIds = [];
     $$.defocusedTargetIds = [];
 };
+
+module.exports = APIfocus;

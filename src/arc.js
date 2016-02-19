@@ -1,4 +1,7 @@
-c3_chart_internal_fn.initPie = function () {
+var arc = {};
+var CLASS = require('./class');
+
+arc.initPie = function () {
     var $$ = this, d3 = $$.d3, config = $$.config;
     $$.pie = d3.layout.pie().value(function (d) {
         return d.values.reduce(function (a, b) { return a + b.value; }, 0);
@@ -8,7 +11,7 @@ c3_chart_internal_fn.initPie = function () {
     }
 };
 
-c3_chart_internal_fn.updateRadius = function () {
+arc.updateRadius = function () {
     var $$ = this, config = $$.config,
         w = config.gauge_width || config.donut_width;
     $$.radiusExpanded = Math.min($$.arcWidth, $$.arcHeight) / 2;
@@ -17,14 +20,14 @@ c3_chart_internal_fn.updateRadius = function () {
     $$.innerRadius = $$.hasType('donut') || $$.hasType('gauge') ? $$.radius * $$.innerRadiusRatio : 0;
 };
 
-c3_chart_internal_fn.updateArc = function () {
+arc.updateArc = function () {
     var $$ = this;
     $$.svgArc = $$.getSvgArc();
     $$.svgArcExpanded = $$.getSvgArcExpanded();
     $$.svgArcExpandedSub = $$.getSvgArcExpanded(0.98);
 };
 
-c3_chart_internal_fn.updateAngle = function (d) {
+arc.updateAngle = function (d) {
     var $$ = this, config = $$.config,
         found = false, index = 0,
         gMin, gMax, gTic, gValue;
@@ -58,7 +61,7 @@ c3_chart_internal_fn.updateAngle = function (d) {
     return found ? d : null;
 };
 
-c3_chart_internal_fn.getSvgArc = function () {
+arc.getSvgArc = function () {
     var $$ = this,
         arc = $$.d3.svg.arc().outerRadius($$.radius).innerRadius($$.innerRadius),
         newArc = function (d, withoutUpdate) {
@@ -72,7 +75,7 @@ c3_chart_internal_fn.getSvgArc = function () {
     return newArc;
 };
 
-c3_chart_internal_fn.getSvgArcExpanded = function (rate) {
+arc.getSvgArcExpanded = function (rate) {
     var $$ = this,
         arc = $$.d3.svg.arc().outerRadius($$.radiusExpanded * (rate ? rate : 1)).innerRadius($$.innerRadius);
     return function (d) {
@@ -81,12 +84,12 @@ c3_chart_internal_fn.getSvgArcExpanded = function (rate) {
     };
 };
 
-c3_chart_internal_fn.getArc = function (d, withoutUpdate, force) {
+arc.getArc = function (d, withoutUpdate, force) {
     return force || this.isArcType(d.data) ? this.svgArc(d, withoutUpdate) : "M 0 0";
 };
 
 
-c3_chart_internal_fn.transformForArcLabel = function (d) {
+arc.transformForArcLabel = function (d) {
     var $$ = this,
         updated = $$.updateAngle(d), c, x, y, h, ratio, translate = "";
     if (updated && !$$.hasType('gauge')) {
@@ -101,13 +104,13 @@ c3_chart_internal_fn.transformForArcLabel = function (d) {
     return translate;
 };
 
-c3_chart_internal_fn.getArcRatio = function (d) {
+arc.getArcRatio = function (d) {
     var $$ = this,
         whole = $$.hasType('gauge') ? Math.PI : (Math.PI * 2);
     return d ? (d.endAngle - d.startAngle) / whole : null;
 };
 
-c3_chart_internal_fn.convertToArcData = function (d) {
+arc.convertToArcData = function (d) {
     return this.addName({
         id: d.data.id,
         value: d.value,
@@ -116,7 +119,7 @@ c3_chart_internal_fn.convertToArcData = function (d) {
     });
 };
 
-c3_chart_internal_fn.textForArcLabel = function (d) {
+arc.textForArcLabel = function (d) {
     var $$ = this,
         updated, value, ratio, id, format;
     if (! $$.shouldShowArcLabel()) { return ""; }
@@ -129,7 +132,7 @@ c3_chart_internal_fn.textForArcLabel = function (d) {
     return format ? format(value, ratio, id) : $$.defaultArcValueFormat(value, ratio);
 };
 
-c3_chart_internal_fn.expandArc = function (targetIds) {
+arc.expandArc = function (targetIds) {
     var $$ = this, interval;
 
     // MEMO: avoid to cancel transition
@@ -162,7 +165,7 @@ c3_chart_internal_fn.expandArc = function (targetIds) {
     });
 };
 
-c3_chart_internal_fn.unexpandArc = function (targetIds) {
+arc.unexpandArc = function (targetIds) {
     var $$ = this;
 
     if ($$.transiting) { return; }
@@ -178,7 +181,7 @@ c3_chart_internal_fn.unexpandArc = function (targetIds) {
         .style("opacity", 1);
 };
 
-c3_chart_internal_fn.expandDuration = function (id) {
+arc.expandDuration = function (id) {
     var $$ = this, config = $$.config;
 
     if ($$.isDonutType(id)) {
@@ -193,14 +196,14 @@ c3_chart_internal_fn.expandDuration = function (id) {
 
 };
 
-c3_chart_internal_fn.shouldExpand = function (id) {
+arc.shouldExpand = function (id) {
     var $$ = this, config = $$.config;
     return ($$.isDonutType(id) && config.donut_expand) ||
            ($$.isGaugeType(id) && config.gauge_expand) ||
            ($$.isPieType(id) && config.pie_expand);
 };
 
-c3_chart_internal_fn.shouldShowArcLabel = function () {
+arc.shouldShowArcLabel = function () {
     var $$ = this, config = $$.config, shouldShow = true;
     if ($$.hasType('donut')) {
         shouldShow = config.donut_label_show;
@@ -211,13 +214,13 @@ c3_chart_internal_fn.shouldShowArcLabel = function () {
     return shouldShow;
 };
 
-c3_chart_internal_fn.meetsArcLabelThreshold = function (ratio) {
+arc.meetsArcLabelThreshold = function (ratio) {
     var $$ = this, config = $$.config,
         threshold = $$.hasType('donut') ? config.donut_label_threshold : config.pie_label_threshold;
     return ratio >= threshold;
 };
 
-c3_chart_internal_fn.getArcLabelFormat = function () {
+arc.getArcLabelFormat = function () {
     var $$ = this, config = $$.config,
         format = config.pie_label_format;
     if ($$.hasType('gauge')) {
@@ -228,12 +231,12 @@ c3_chart_internal_fn.getArcLabelFormat = function () {
     return format;
 };
 
-c3_chart_internal_fn.getArcTitle = function () {
+arc.getArcTitle = function () {
     var $$ = this;
     return $$.hasType('donut') ? $$.config.donut_title : "";
 };
 
-c3_chart_internal_fn.updateTargetsForArc = function (targets) {
+arc.updateTargetsForArc = function (targets) {
     var $$ = this, main = $$.main,
         mainPieUpdate, mainPieEnter,
         classChartArc = $$.classChartArc.bind($$),
@@ -255,7 +258,7 @@ c3_chart_internal_fn.updateTargetsForArc = function (targets) {
     //mainPieUpdate.exit().remove();
 };
 
-c3_chart_internal_fn.initArc = function () {
+arc.initArc = function () {
     var $$ = this;
     $$.arcs = $$.main.select('.' + CLASS.chart).append("g")
         .attr("class", CLASS.chartArcs)
@@ -266,7 +269,7 @@ c3_chart_internal_fn.initArc = function () {
         .text($$.getArcTitle());
 };
 
-c3_chart_internal_fn.redrawArc = function (duration, durationForExit, withTransform) {
+arc.redrawArc = function (duration, durationForExit, withTransform) {
     var $$ = this, d3 = $$.d3, config = $$.config, main = $$.main,
         mainArc;
     mainArc = main.selectAll('.' + CLASS.arcs).selectAll('.' + CLASS.arc)
@@ -406,7 +409,7 @@ c3_chart_internal_fn.redrawArc = function (duration, durationForExit, withTransf
             .text(config.gauge_label_show ? config.gauge_max : '');
     }
 };
-c3_chart_internal_fn.initGauge = function () {
+arc.initGauge = function () {
     var arcs = this.arcs;
     if (this.hasType('gauge')) {
         arcs.append('path')
@@ -425,6 +428,8 @@ c3_chart_internal_fn.initGauge = function () {
             .style("pointer-events", "none");
     }
 };
-c3_chart_internal_fn.getGaugeLabelHeight = function () {
+arc.getGaugeLabelHeight = function () {
     return this.config.gauge_label_show ? 20 : 0;
 };
+
+module.exports = arc;

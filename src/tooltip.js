@@ -1,4 +1,10 @@
-c3_chart_internal_fn.initTooltip = function () {
+var tooltip = {};
+var CLASS = require('./class');
+var utils = require('./util');
+var isString = utils.isString;
+var isValue = utils.isValue;
+
+tooltip.initTooltip = function () {
     var $$ = this, config = $$.config, i;
     $$.tooltip = $$.selectChart
         .style("position", "relative")
@@ -24,7 +30,7 @@ c3_chart_internal_fn.initTooltip = function () {
             .style("display", "block");
     }
 };
-c3_chart_internal_fn.getTooltipContent = function (d, defaultTitleFormat, defaultValueFormat, color) {
+tooltip.getTooltipContent = function (d, defaultTitleFormat, defaultValueFormat, color) {
     var $$ = this, config = $$.config,
         titleFormat = config.tooltip_format_title || defaultTitleFormat,
         nameFormat = config.tooltip_format_name || function (name) { return name; },
@@ -72,7 +78,7 @@ c3_chart_internal_fn.getTooltipContent = function (d, defaultTitleFormat, defaul
     }
     return text + "</table>";
 };
-c3_chart_internal_fn.tooltipPosition = function (dataToShow, tWidth, tHeight, element) {
+tooltip.tooltipPosition = function (dataToShow, tWidth, tHeight, element) {
     var $$ = this, config = $$.config, d3 = $$.d3;
     var svgLeft, tooltipLeft, tooltipRight, tooltipTop, chartRight;
     var forArc = $$.hasArcType(),
@@ -108,12 +114,12 @@ c3_chart_internal_fn.tooltipPosition = function (dataToShow, tWidth, tHeight, el
     }
     return {top: tooltipTop, left: tooltipLeft};
 };
-c3_chart_internal_fn.showTooltip = function (selectedData, element) {
+tooltip.showTooltip = function (selectedData, element) {
     var $$ = this, config = $$.config;
     var tWidth, tHeight, position;
     var forArc = $$.hasArcType(),
         dataToShow = selectedData.filter(function (d) { return d && isValue(d.value); }),
-        positionFunction = config.tooltip_position || c3_chart_internal_fn.tooltipPosition;
+        positionFunction = config.tooltip_position || tooltip.tooltipPosition;
     if (dataToShow.length === 0 || !config.tooltip_show) {
         return;
     }
@@ -129,6 +135,8 @@ c3_chart_internal_fn.showTooltip = function (selectedData, element) {
         .style("top", position.top + "px")
         .style("left", position.left + 'px');
 };
-c3_chart_internal_fn.hideTooltip = function () {
+tooltip.hideTooltip = function () {
     this.tooltip.style("display", "none");
 };
+
+module.exports = tooltip;

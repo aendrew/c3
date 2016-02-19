@@ -1,7 +1,9 @@
-c3_chart_internal_fn.getScale = function (min, max, forTimeseries) {
+var scale = {};
+
+scale.getScale = function (min, max, forTimeseries) {
     return (forTimeseries ? this.d3.time.scale() : this.d3.scale.linear()).range([min, max]);
 };
-c3_chart_internal_fn.getX = function (min, max, domain, offset) {
+scale.getX = function (min, max, domain, offset) {
     var $$ = this,
         scale = $$.getScale(min, max, $$.isTimeSeries()),
         _scale = domain ? scale.domain(domain) : scale, key;
@@ -38,18 +40,18 @@ c3_chart_internal_fn.getX = function (min, max, domain, offset) {
     }
     return scale;
 };
-c3_chart_internal_fn.getY = function (min, max, domain) {
+scale.getY = function (min, max, domain) {
     var scale = this.getScale(min, max, this.isTimeSeriesY());
     if (domain) { scale.domain(domain); }
     return scale;
 };
-c3_chart_internal_fn.getYScale = function (id) {
+scale.getYScale = function (id) {
     return this.axis.getId(id) === 'y2' ? this.y2 : this.y;
 };
-c3_chart_internal_fn.getSubYScale = function (id) {
+scale.getSubYScale = function (id) {
     return this.axis.getId(id) === 'y2' ? this.subY2 : this.subY;
 };
-c3_chart_internal_fn.updateScales = function () {
+scale.updateScales = function () {
     var $$ = this, config = $$.config,
         forInit = !$$.x;
     // update edges
@@ -87,3 +89,5 @@ c3_chart_internal_fn.updateScales = function () {
     // update for arc
     if ($$.updateArc) { $$.updateArc(); }
 };
+
+module.exports = scale;

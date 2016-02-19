@@ -1,4 +1,13 @@
-c3_chart_fn.flow = function (args) {
+var APIflow = {};
+var flow = {};
+
+var utils = require('./util');
+var CLASS = require('./class');
+var isDefined = utils.isDefined;
+var diffDomain = utils.diffDomain;
+var isValue = utils.isValue;
+
+APIflow.flow = function (args) {
     var $$ = this.internal,
         targets, data, notfoundIds = [], orgDataCount = $$.getMaxDataCount(),
         dataCount, domain, baseTarget, baseValue, length = 0, tail = 0, diff, to;
@@ -141,7 +150,7 @@ c3_chart_fn.flow = function (args) {
     });
 };
 
-c3_chart_internal_fn.generateFlow = function (args) {
+flow.generateFlow = function (args) {
     var $$ = this, config = $$.config, d3 = $$.d3;
 
     return function () {
@@ -289,4 +298,9 @@ c3_chart_internal_fn.generateFlow = function (args) {
             $$.flowing = false;
         });
     };
+};
+
+module.exports = {
+    public: APIflow,
+    private: flow
 };

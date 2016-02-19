@@ -1,4 +1,6 @@
-c3_chart_internal_fn.initGrid = function () {
+var grid = {};
+
+grid.initGrid = function () {
     var $$ = this, config = $$.config, d3 = $$.d3;
     $$.grid = $$.main.append('g')
         .attr("clip-path", $$.clipPathForGrid)
@@ -18,7 +20,7 @@ c3_chart_internal_fn.initGrid = function () {
     $$.xgrid = d3.selectAll([]);
     if (!config.grid_lines_front) { $$.initGridLines(); }
 };
-c3_chart_internal_fn.initGridLines = function () {
+grid.initGridLines = function () {
     var $$ = this, d3 = $$.d3;
     $$.gridLines = $$.main.append('g')
         .attr("clip-path", $$.clipPathForGrid)
@@ -27,7 +29,7 @@ c3_chart_internal_fn.initGridLines = function () {
     $$.gridLines.append('g').attr('class', CLASS.ygridLines);
     $$.xgridLines = d3.selectAll([]);
 };
-c3_chart_internal_fn.updateXGrid = function (withoutUpdate) {
+grid.updateXGrid = function (withoutUpdate) {
     var $$ = this, config = $$.config, d3 = $$.d3,
         xgridData = $$.generateGridData(config.grid_x_type, $$.x),
         tickOffset = $$.isCategorized() ? $$.xAxis.tickOffset() : 0;
@@ -54,7 +56,7 @@ c3_chart_internal_fn.updateXGrid = function (withoutUpdate) {
     $$.xgrid.exit().remove();
 };
 
-c3_chart_internal_fn.updateYGrid = function () {
+grid.updateYGrid = function () {
     var $$ = this, config = $$.config,
         gridValues = $$.yAxis.tickValues() || $$.y.ticks(config.grid_y_ticks);
     $$.ygrid = $$.main.select('.' + CLASS.ygrids).selectAll('.' + CLASS.ygrid)
@@ -69,19 +71,19 @@ c3_chart_internal_fn.updateYGrid = function () {
     $$.smoothLines($$.ygrid, 'grid');
 };
 
-c3_chart_internal_fn.gridTextAnchor = function (d) {
+grid.gridTextAnchor = function (d) {
     return d.position ? d.position : "end";
 };
-c3_chart_internal_fn.gridTextDx = function (d) {
+grid.gridTextDx = function (d) {
     return d.position === 'start' ? 4 : d.position === 'middle' ? 0 : -4;
 };
-c3_chart_internal_fn.xGridTextX = function (d) {
+grid.xGridTextX = function (d) {
     return d.position === 'start' ? -this.height : d.position === 'middle' ? -this.height / 2 : 0;
 };
-c3_chart_internal_fn.yGridTextX = function (d) {
+grid.yGridTextX = function (d) {
     return d.position === 'start' ? 0 : d.position === 'middle' ? this.width / 2 : this.width;
 };
-c3_chart_internal_fn.updateGrid = function (duration) {
+grid.updateGrid = function (duration) {
     var $$ = this, main = $$.main, config = $$.config,
         xgridLine, ygridLine, yv;
 
@@ -149,7 +151,7 @@ c3_chart_internal_fn.updateGrid = function (duration) {
         .style("opacity", 0)
         .remove();
 };
-c3_chart_internal_fn.redrawGrid = function (withTransition) {
+grid.redrawGrid = function (withTransition) {
     var $$ = this, config = $$.config, xv = $$.xv.bind($$),
         lines = $$.xgridLines.select('line'),
         texts = $$.xgridLines.select('text');
@@ -167,7 +169,7 @@ c3_chart_internal_fn.redrawGrid = function (withTransition) {
             .style("opacity", 1)
     ];
 };
-c3_chart_internal_fn.showXGridFocus = function (selectedData) {
+grid.showXGridFocus = function (selectedData) {
     var $$ = this, config = $$.config,
         dataToShow = selectedData.filter(function (d) { return d && isValue(d.value); }),
         focusEl = $$.main.selectAll('line.' + CLASS.xgridFocus),
@@ -182,10 +184,10 @@ c3_chart_internal_fn.showXGridFocus = function (selectedData) {
         .attr(config.axis_rotated ? 'y2' : 'x2', xx);
     $$.smoothLines(focusEl, 'grid');
 };
-c3_chart_internal_fn.hideXGridFocus = function () {
+grid.hideXGridFocus = function () {
     this.main.select('line.' + CLASS.xgridFocus).style("visibility", "hidden");
 };
-c3_chart_internal_fn.updateXgridFocus = function () {
+grid.updateXgridFocus = function () {
     var $$ = this, config = $$.config;
     $$.main.select('line.' + CLASS.xgridFocus)
         .attr("x1", config.axis_rotated ? 0 : -10)
@@ -193,7 +195,7 @@ c3_chart_internal_fn.updateXgridFocus = function () {
         .attr("y1", config.axis_rotated ? -10 : 0)
         .attr("y2", config.axis_rotated ? -10 : $$.height);
 };
-c3_chart_internal_fn.generateGridData = function (type, scale) {
+grid.generateGridData = function (type, scale) {
     var $$ = this,
         gridData = [], xDomain, firstYear, lastYear, i,
         tickNum = $$.main.select("." + CLASS.axisX).selectAll('.tick').size();
@@ -212,7 +214,7 @@ c3_chart_internal_fn.generateGridData = function (type, scale) {
     }
     return gridData;
 };
-c3_chart_internal_fn.getGridFilterToRemove = function (params) {
+grid.getGridFilterToRemove = function (params) {
     return params ? function (line) {
         var found = false;
         [].concat(params).forEach(function (param) {
@@ -223,7 +225,7 @@ c3_chart_internal_fn.getGridFilterToRemove = function (params) {
         return found;
     } : function () { return true; };
 };
-c3_chart_internal_fn.removeGridLines = function (params, forX) {
+grid.removeGridLines = function (params, forX) {
     var $$ = this, config = $$.config,
         toRemove = $$.getGridFilterToRemove(params),
         toShow = function (line) { return !toRemove(line); },
@@ -238,3 +240,5 @@ c3_chart_internal_fn.removeGridLines = function (params, forX) {
         config.grid_y_lines = config.grid_y_lines.filter(toShow);
     }
 };
+
+module.exports = grid;

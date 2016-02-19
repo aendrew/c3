@@ -1,4 +1,6 @@
-c3_chart_internal_fn.selectPoint = function (target, d, i) {
+var selection = {};
+
+selection.selectPoint = function (target, d, i) {
     var $$ = this, config = $$.config,
         cx = (config.axis_rotated ? $$.circleY : $$.circleX).bind($$),
         cy = (config.axis_rotated ? $$.circleX : $$.circleY).bind($$),
@@ -16,7 +18,7 @@ c3_chart_internal_fn.selectPoint = function (target, d, i) {
         .transition().duration(100)
         .attr("r", r);
 };
-c3_chart_internal_fn.unselectPoint = function (target, d, i) {
+selection.unselectPoint = function (target, d, i) {
     var $$ = this;
     $$.config.data_onunselected.call($$.api, d, target.node());
     // remove selected-circle from low layer g
@@ -24,25 +26,25 @@ c3_chart_internal_fn.unselectPoint = function (target, d, i) {
         .transition().duration(100).attr('r', 0)
         .remove();
 };
-c3_chart_internal_fn.togglePoint = function (selected, target, d, i) {
+selection.togglePoint = function (selected, target, d, i) {
     selected ? this.selectPoint(target, d, i) : this.unselectPoint(target, d, i);
 };
-c3_chart_internal_fn.selectPath = function (target, d) {
+selection.selectPath = function (target, d) {
     var $$ = this;
     $$.config.data_onselected.call($$, d, target.node());
     target.transition().duration(100)
         .style("fill", function () { return $$.d3.rgb($$.color(d)).brighter(0.75); });
 };
-c3_chart_internal_fn.unselectPath = function (target, d) {
+selection.unselectPath = function (target, d) {
     var $$ = this;
     $$.config.data_onunselected.call($$, d, target.node());
     target.transition().duration(100)
         .style("fill", function () { return $$.color(d); });
 };
-c3_chart_internal_fn.togglePath = function (selected, target, d, i) {
+selection.togglePath = function (selected, target, d, i) {
     selected ? this.selectPath(target, d, i) : this.unselectPath(target, d, i);
 };
-c3_chart_internal_fn.getToggle = function (that, d) {
+selection.getToggle = function (that, d) {
     var $$ = this, toggle;
     if (that.nodeName === 'circle') {
         if ($$.isStepType(d)) {
@@ -57,7 +59,7 @@ c3_chart_internal_fn.getToggle = function (that, d) {
     }
     return toggle;
 };
-c3_chart_internal_fn.toggleShape = function (that, d, i) {
+selection.toggleShape = function (that, d, i) {
     var $$ = this, d3 = $$.d3, config = $$.config,
         shape = d3.select(that), isSelected = shape.classed(CLASS.SELECTED),
         toggle = $$.getToggle(that, d).bind($$);
@@ -73,3 +75,5 @@ c3_chart_internal_fn.toggleShape = function (that, d, i) {
         toggle(!isSelected, shape, d, i);
     }
 };
+
+module.exports = selection;

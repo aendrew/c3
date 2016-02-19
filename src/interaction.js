@@ -1,10 +1,12 @@
-c3_chart_internal_fn.initEventRect = function () {
+var interaction = {};
+
+interaction.initEventRect = function () {
     var $$ = this;
     $$.main.select('.' + CLASS.chart).append("g")
         .attr("class", CLASS.eventRects)
         .style('fill-opacity', 0);
 };
-c3_chart_internal_fn.redrawEventRect = function () {
+interaction.redrawEventRect = function () {
     var $$ = this, config = $$.config,
         eventRectUpdate, maxDataCountTarget,
         isMultipleX = $$.isMultipleX();
@@ -43,7 +45,7 @@ c3_chart_internal_fn.redrawEventRect = function () {
         eventRectUpdate.exit().remove();
     }
 };
-c3_chart_internal_fn.updateEventRect = function (eventRectUpdate) {
+interaction.updateEventRect = function (eventRectUpdate) {
     var $$ = this, config = $$.config,
         x, y, w, h, rectW, rectX;
 
@@ -108,7 +110,7 @@ c3_chart_internal_fn.updateEventRect = function (eventRectUpdate) {
         .attr("width", w)
         .attr("height", h);
 };
-c3_chart_internal_fn.generateEventRectsForSingleX = function (eventRectEnter) {
+interaction.generateEventRectsForSingleX = function (eventRectEnter) {
     var $$ = this, d3 = $$.d3, config = $$.config;
     eventRectEnter.append("rect")
         .attr("class", $$.classEvent.bind($$))
@@ -224,7 +226,7 @@ c3_chart_internal_fn.generateEventRectsForSingleX = function (eventRectEnter) {
         );
 };
 
-c3_chart_internal_fn.generateEventRectsForMultipleXs = function (eventRectEnter) {
+interaction.generateEventRectsForMultipleXs = function (eventRectEnter) {
     var $$ = this, d3 = $$.d3, config = $$.config;
 
     function mouseout() {
@@ -323,7 +325,7 @@ c3_chart_internal_fn.generateEventRectsForMultipleXs = function (eventRectEnter)
             ) : function () {}
         );
 };
-c3_chart_internal_fn.dispatchEvent = function (type, index, mouse) {
+interaction.dispatchEvent = function (type, index, mouse) {
     var $$ = this,
         selector = '.' + CLASS.eventRect + (!$$.isMultipleX() ? '-' + index : ''),
         eventRect = $$.main.select(selector).node(),
@@ -336,3 +338,5 @@ c3_chart_internal_fn.dispatchEvent = function (type, index, mouse) {
                          false, false, false, false, 0, null);
     eventRect.dispatchEvent(event);
 };
+
+module.exports = interaction;

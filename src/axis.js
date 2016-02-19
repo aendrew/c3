@@ -1,5 +1,31 @@
+var CLASS = require('./class');
+var c3_axis = require('./c3.axis');
+var utils = require('./util');
+var isEmpty = utils.isEmpty;
+var isFunction = utils.isFunction;
+var isValue = utils.isValue;
+var isString = utils.isString;
+
 function Axis(owner) {
     API.call(this, owner);
+}
+
+function API(owner) {
+    this.owner = owner;
+}
+
+function inherit(base, derived) {
+    if (Object.create) {
+        derived.prototype = Object.create(base.prototype);
+    } else {
+        var f = function f() {};
+        f.prototype = base.prototype;
+        derived.prototype = new f();
+    }
+
+    derived.prototype.constructor = derived;
+
+    return derived;
 }
 
 inherit(API, Axis);
@@ -382,3 +408,5 @@ Axis.prototype.redraw = function redraw(transitions, isHidden) {
     transitions.axisY2.call($$.y2Axis);
     transitions.axisSubX.call($$.subXAxis);
 };
+
+module.exports = Axis;

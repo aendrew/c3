@@ -1,10 +1,13 @@
-c3_chart_fn.transform = function (type, targetIds) {
+var APItransform = {};
+var transform = {};
+
+APItransform.transform = function (type, targetIds) {
     var $$ = this.internal,
         options = ['pie', 'donut'].indexOf(type) >= 0 ? {withTransform: true} : null;
     $$.transformTo(targetIds, type, options);
 };
 
-c3_chart_internal_fn.transformTo = function (targetIds, type, optionsForRedraw) {
+transform.transformTo = function (targetIds, type, optionsForRedraw) {
     var $$ = this,
         withTransitionForAxis = !$$.hasArcType(),
         options = optionsForRedraw || {withTransitionForAxis: withTransitionForAxis};
@@ -13,4 +16,9 @@ c3_chart_internal_fn.transformTo = function (targetIds, type, optionsForRedraw) 
     $$.setTargetType(targetIds, type);
     $$.updateTargets($$.data.targets); // this is needed when transforming to arc
     $$.updateAndRedraw(options);
+};
+
+module.exports = {
+    public: APItransform,
+    private: transform
 };

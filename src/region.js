@@ -1,10 +1,12 @@
-c3_chart_internal_fn.initRegion = function () {
+var region = {};
+
+region.initRegion = function () {
     var $$ = this;
     $$.region = $$.main.append('g')
         .attr("clip-path", $$.clipPath)
         .attr("class", CLASS.regions);
 };
-c3_chart_internal_fn.updateRegion = function (duration) {
+region.updateRegion = function (duration) {
     var $$ = this, config = $$.config;
 
     // hide if arc type
@@ -20,7 +22,7 @@ c3_chart_internal_fn.updateRegion = function (duration) {
         .style("opacity", 0)
         .remove();
 };
-c3_chart_internal_fn.redrawRegion = function (withTransition) {
+region.redrawRegion = function (withTransition) {
     var $$ = this,
         regions = $$.mainRegion.selectAll('rect'),
         x = $$.regionX.bind($$),
@@ -36,7 +38,7 @@ c3_chart_internal_fn.redrawRegion = function (withTransition) {
             .style("fill-opacity", function (d) { return isValue(d.opacity) ? d.opacity : 0.1; })
     ];
 };
-c3_chart_internal_fn.regionX = function (d) {
+region.regionX = function (d) {
     var $$ = this, config = $$.config,
         xPos, yScale = d.axis === 'y' ? $$.y : $$.y2;
     if (d.axis === 'y' || d.axis === 'y2') {
@@ -46,7 +48,7 @@ c3_chart_internal_fn.regionX = function (d) {
     }
     return xPos;
 };
-c3_chart_internal_fn.regionY = function (d) {
+region.regionY = function (d) {
     var $$ = this, config = $$.config,
         yPos, yScale = d.axis === 'y' ? $$.y : $$.y2;
     if (d.axis === 'y' || d.axis === 'y2') {
@@ -56,7 +58,7 @@ c3_chart_internal_fn.regionY = function (d) {
     }
     return yPos;
 };
-c3_chart_internal_fn.regionWidth = function (d) {
+region.regionWidth = function (d) {
     var $$ = this, config = $$.config,
         start = $$.regionX(d), end, yScale = d.axis === 'y' ? $$.y : $$.y2;
     if (d.axis === 'y' || d.axis === 'y2') {
@@ -66,7 +68,7 @@ c3_chart_internal_fn.regionWidth = function (d) {
     }
     return end < start ? 0 : end - start;
 };
-c3_chart_internal_fn.regionHeight = function (d) {
+region.regionHeight = function (d) {
     var $$ = this, config = $$.config,
         start = this.regionY(d), end, yScale = d.axis === 'y' ? $$.y : $$.y2;
     if (d.axis === 'y' || d.axis === 'y2') {
@@ -76,6 +78,8 @@ c3_chart_internal_fn.regionHeight = function (d) {
     }
     return end < start ? 0 : end - start;
 };
-c3_chart_internal_fn.isRegionOnX = function (d) {
+region.isRegionOnX = function (d) {
     return !d.axis || d.axis === 'x';
 };
+
+module.exports = region;

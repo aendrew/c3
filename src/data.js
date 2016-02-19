@@ -1,15 +1,17 @@
-c3_chart_internal_fn.isX = function (key) {
+var data = {};
+
+data.isX = function (key) {
     var $$ = this, config = $$.config;
     return (config.data_x && key === config.data_x) || (notEmpty(config.data_xs) && hasValue(config.data_xs, key));
 };
-c3_chart_internal_fn.isNotX = function (key) {
+data.isNotX = function (key) {
     return !this.isX(key);
 };
-c3_chart_internal_fn.getXKey = function (id) {
+data.getXKey = function (id) {
     var $$ = this, config = $$.config;
     return config.data_x ? config.data_x : notEmpty(config.data_xs) ? config.data_xs[id] : null;
 };
-c3_chart_internal_fn.getXValuesOfXKey = function (key, targets) {
+data.getXValuesOfXKey = function (key, targets) {
     var $$ = this,
         xValues, ids = targets && notEmpty(targets) ? $$.mapToIds(targets) : [];
     ids.forEach(function (id) {
@@ -19,37 +21,37 @@ c3_chart_internal_fn.getXValuesOfXKey = function (key, targets) {
     });
     return xValues;
 };
-c3_chart_internal_fn.getIndexByX = function (x) {
+data.getIndexByX = function (x) {
     var $$ = this,
         data = $$.filterByX($$.data.targets, x);
     return data.length ? data[0].index : null;
 };
-c3_chart_internal_fn.getXValue = function (id, i) {
+data.getXValue = function (id, i) {
     var $$ = this;
     return id in $$.data.xs && $$.data.xs[id] && isValue($$.data.xs[id][i]) ? $$.data.xs[id][i] : i;
 };
-c3_chart_internal_fn.getOtherTargetXs = function () {
+data.getOtherTargetXs = function () {
     var $$ = this,
         idsForX = Object.keys($$.data.xs);
     return idsForX.length ? $$.data.xs[idsForX[0]] : null;
 };
-c3_chart_internal_fn.getOtherTargetX = function (index) {
+data.getOtherTargetX = function (index) {
     var xs = this.getOtherTargetXs();
     return xs && index < xs.length ? xs[index] : null;
 };
-c3_chart_internal_fn.addXs = function (xs) {
+data.addXs = function (xs) {
     var $$ = this;
     Object.keys(xs).forEach(function (id) {
         $$.config.data_xs[id] = xs[id];
     });
 };
-c3_chart_internal_fn.hasMultipleX = function (xs) {
+data.hasMultipleX = function (xs) {
     return this.d3.set(Object.keys(xs).map(function (id) { return xs[id]; })).size() > 1;
 };
-c3_chart_internal_fn.isMultipleX = function () {
+data.isMultipleX = function () {
     return notEmpty(this.config.data_xs) || !this.config.data_xSort || this.hasType('scatter');
 };
-c3_chart_internal_fn.addName = function (data) {
+data.addName = function (data) {
     var $$ = this, name;
     if (data) {
         name = $$.config.data_names[data.id];
@@ -57,11 +59,11 @@ c3_chart_internal_fn.addName = function (data) {
     }
     return data;
 };
-c3_chart_internal_fn.getValueOnIndex = function (values, index) {
+data.getValueOnIndex = function (values, index) {
     var valueOnIndex = values.filter(function (v) { return v.index === index; });
     return valueOnIndex.length ? valueOnIndex[0] : null;
 };
-c3_chart_internal_fn.updateTargetX = function (targets, x) {
+data.updateTargetX = function (targets, x) {
     var $$ = this;
     targets.forEach(function (t) {
         t.values.forEach(function (v, i) {
@@ -70,7 +72,7 @@ c3_chart_internal_fn.updateTargetX = function (targets, x) {
         $$.data.xs[t.id] = x;
     });
 };
-c3_chart_internal_fn.updateTargetXs = function (targets, xs) {
+data.updateTargetXs = function (targets, xs) {
     var $$ = this;
     targets.forEach(function (t) {
         if (xs[t.id]) {
@@ -78,7 +80,7 @@ c3_chart_internal_fn.updateTargetXs = function (targets, xs) {
         }
     });
 };
-c3_chart_internal_fn.generateTargetX = function (rawX, id, index) {
+data.generateTargetX = function (rawX, id, index) {
     var $$ = this, x;
     if ($$.isTimeSeries()) {
         x = rawX ? $$.parseDate(rawX) : $$.parseDate($$.getXValue(id, index));
@@ -91,7 +93,7 @@ c3_chart_internal_fn.generateTargetX = function (rawX, id, index) {
     }
     return x;
 };
-c3_chart_internal_fn.cloneTarget = function (target) {
+data.cloneTarget = function (target) {
     return {
         id : target.id,
         id_org : target.id_org,
@@ -100,7 +102,7 @@ c3_chart_internal_fn.cloneTarget = function (target) {
         })
     };
 };
-c3_chart_internal_fn.updateXs = function () {
+data.updateXs = function () {
     var $$ = this;
     if ($$.data.targets.length) {
         $$.xs = [];
@@ -109,19 +111,19 @@ c3_chart_internal_fn.updateXs = function () {
         });
     }
 };
-c3_chart_internal_fn.getPrevX = function (i) {
+data.getPrevX = function (i) {
     var x = this.xs[i - 1];
     return typeof x !== 'undefined' ? x : null;
 };
-c3_chart_internal_fn.getNextX = function (i) {
+data.getNextX = function (i) {
     var x = this.xs[i + 1];
     return typeof x !== 'undefined' ? x : null;
 };
-c3_chart_internal_fn.getMaxDataCount = function () {
+data.getMaxDataCount = function () {
     var $$ = this;
     return $$.d3.max($$.data.targets, function (t) { return t.values.length; });
 };
-c3_chart_internal_fn.getMaxDataCountTarget = function (targets) {
+data.getMaxDataCountTarget = function (targets) {
     var length = targets.length, max = 0, maxTarget;
     if (length > 1) {
         targets.forEach(function (t) {
@@ -135,21 +137,21 @@ c3_chart_internal_fn.getMaxDataCountTarget = function (targets) {
     }
     return maxTarget;
 };
-c3_chart_internal_fn.getEdgeX = function (targets) {
+data.getEdgeX = function (targets) {
     var $$ = this;
     return !targets.length ? [0, 0] : [
         $$.d3.min(targets, function (t) { return t.values[0].x; }),
         $$.d3.max(targets, function (t) { return t.values[t.values.length - 1].x; })
     ];
 };
-c3_chart_internal_fn.mapToIds = function (targets) {
+data.mapToIds = function (targets) {
     return targets.map(function (d) { return d.id; });
 };
-c3_chart_internal_fn.mapToTargetIds = function (ids) {
+data.mapToTargetIds = function (ids) {
     var $$ = this;
     return ids ? [].concat(ids) : $$.mapToIds($$.data.targets);
 };
-c3_chart_internal_fn.hasTarget = function (targets, id) {
+data.hasTarget = function (targets, id) {
     var ids = this.mapToIds(targets), i;
     for (i = 0; i < ids.length; i++) {
         if (ids[i] === id) {
@@ -158,35 +160,35 @@ c3_chart_internal_fn.hasTarget = function (targets, id) {
     }
     return false;
 };
-c3_chart_internal_fn.isTargetToShow = function (targetId) {
+data.isTargetToShow = function (targetId) {
     return this.hiddenTargetIds.indexOf(targetId) < 0;
 };
-c3_chart_internal_fn.isLegendToShow = function (targetId) {
+data.isLegendToShow = function (targetId) {
     return this.hiddenLegendIds.indexOf(targetId) < 0;
 };
-c3_chart_internal_fn.filterTargetsToShow = function (targets) {
+data.filterTargetsToShow = function (targets) {
     var $$ = this;
     return targets.filter(function (t) { return $$.isTargetToShow(t.id); });
 };
-c3_chart_internal_fn.mapTargetsToUniqueXs = function (targets) {
+data.mapTargetsToUniqueXs = function (targets) {
     var $$ = this;
     var xs = $$.d3.set($$.d3.merge(targets.map(function (t) { return t.values.map(function (v) { return +v.x; }); }))).values();
     xs = $$.isTimeSeries() ? xs.map(function (x) { return new Date(+x); }) : xs.map(function (x) { return +x; });
     return xs.sort(function (a, b) { return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN; });
 };
-c3_chart_internal_fn.addHiddenTargetIds = function (targetIds) {
+data.addHiddenTargetIds = function (targetIds) {
     this.hiddenTargetIds = this.hiddenTargetIds.concat(targetIds);
 };
-c3_chart_internal_fn.removeHiddenTargetIds = function (targetIds) {
+data.removeHiddenTargetIds = function (targetIds) {
     this.hiddenTargetIds = this.hiddenTargetIds.filter(function (id) { return targetIds.indexOf(id) < 0; });
 };
-c3_chart_internal_fn.addHiddenLegendIds = function (targetIds) {
+data.addHiddenLegendIds = function (targetIds) {
     this.hiddenLegendIds = this.hiddenLegendIds.concat(targetIds);
 };
-c3_chart_internal_fn.removeHiddenLegendIds = function (targetIds) {
+data.removeHiddenLegendIds = function (targetIds) {
     this.hiddenLegendIds = this.hiddenLegendIds.filter(function (id) { return targetIds.indexOf(id) < 0; });
 };
-c3_chart_internal_fn.getValuesAsIdKeyed = function (targets) {
+data.getValuesAsIdKeyed = function (targets) {
     var ys = {};
     targets.forEach(function (t) {
         ys[t.id] = [];
@@ -196,7 +198,7 @@ c3_chart_internal_fn.getValuesAsIdKeyed = function (targets) {
     });
     return ys;
 };
-c3_chart_internal_fn.checkValueInTargets = function (targets, checker) {
+data.checkValueInTargets = function (targets, checker) {
     var ids = Object.keys(targets), i, j, values;
     for (i = 0; i < ids.length; i++) {
         values = targets[ids[i]].values;
@@ -208,21 +210,21 @@ c3_chart_internal_fn.checkValueInTargets = function (targets, checker) {
     }
     return false;
 };
-c3_chart_internal_fn.hasNegativeValueInTargets = function (targets) {
+data.hasNegativeValueInTargets = function (targets) {
     return this.checkValueInTargets(targets, function (v) { return v < 0; });
 };
-c3_chart_internal_fn.hasPositiveValueInTargets = function (targets) {
+data.hasPositiveValueInTargets = function (targets) {
     return this.checkValueInTargets(targets, function (v) { return v > 0; });
 };
-c3_chart_internal_fn.isOrderDesc = function () {
+data.isOrderDesc = function () {
     var config = this.config;
     return typeof(config.data_order) === 'string' && config.data_order.toLowerCase() === 'desc';
 };
-c3_chart_internal_fn.isOrderAsc = function () {
+data.isOrderAsc = function () {
     var config = this.config;
     return typeof(config.data_order) === 'string' && config.data_order.toLowerCase() === 'asc';
 };
-c3_chart_internal_fn.orderTargets = function (targets) {
+data.orderTargets = function (targets) {
     var $$ = this, config = $$.config, orderAsc = $$.isOrderAsc(), orderDesc = $$.isOrderDesc();
     if (orderAsc || orderDesc) {
         targets.sort(function (t1, t2) {
@@ -236,13 +238,13 @@ c3_chart_internal_fn.orderTargets = function (targets) {
     } // TODO: accept name array for order
     return targets;
 };
-c3_chart_internal_fn.filterByX = function (targets, x) {
+data.filterByX = function (targets, x) {
     return this.d3.merge(targets.map(function (t) { return t.values; })).filter(function (v) { return v.x - x === 0; });
 };
-c3_chart_internal_fn.filterRemoveNull = function (data) {
+data.filterRemoveNull = function (data) {
     return data.filter(function (d) { return isValue(d.value); });
 };
-c3_chart_internal_fn.filterByXDomain = function (targets, xDomain) {
+data.filterByXDomain = function (targets, xDomain) {
     return targets.map(function (t) {
         return {
             id: t.id,
@@ -253,7 +255,7 @@ c3_chart_internal_fn.filterByXDomain = function (targets, xDomain) {
         };
     });
 };
-c3_chart_internal_fn.hasDataLabel = function () {
+data.hasDataLabel = function () {
     var config = this.config;
     if (typeof config.data_labels === 'boolean' && config.data_labels) {
         return true;
@@ -262,7 +264,7 @@ c3_chart_internal_fn.hasDataLabel = function () {
     }
     return false;
 };
-c3_chart_internal_fn.getDataLabelLength = function (min, max, key) {
+data.getDataLabelLength = function (min, max, key) {
     var $$ = this,
         lengths = [0, 0], paddingCoef = 1.3;
     $$.selectChart.select('svg').selectAll('.dummy')
@@ -275,13 +277,13 @@ c3_chart_internal_fn.getDataLabelLength = function (min, max, key) {
         .remove();
     return lengths;
 };
-c3_chart_internal_fn.isNoneArc = function (d) {
+data.isNoneArc = function (d) {
     return this.hasTarget(this.data.targets, d.id);
 },
-c3_chart_internal_fn.isArc = function (d) {
+data.isArc = function (d) {
     return 'data' in d && this.hasTarget(this.data.targets, d.data.id);
 };
-c3_chart_internal_fn.findSameXOfValues = function (values, index) {
+data.findSameXOfValues = function (values, index) {
     var i, targetX = values[index].x, sames = [];
     for (i = index - 1; i >= 0; i--) {
         if (targetX !== values[i].x) { break; }
@@ -294,7 +296,7 @@ c3_chart_internal_fn.findSameXOfValues = function (values, index) {
     return sames;
 };
 
-c3_chart_internal_fn.findClosestFromTargets = function (targets, pos) {
+data.findClosestFromTargets = function (targets, pos) {
     var $$ = this, candidates;
 
     // map to array of closest points of each target
@@ -305,7 +307,7 @@ c3_chart_internal_fn.findClosestFromTargets = function (targets, pos) {
     // decide closest point and return
     return $$.findClosest(candidates, pos);
 };
-c3_chart_internal_fn.findClosest = function (values, pos) {
+data.findClosest = function (values, pos) {
     var $$ = this, minDist = $$.config.point_sensitivity, closest;
 
     // find mouseovering bar
@@ -327,7 +329,7 @@ c3_chart_internal_fn.findClosest = function (values, pos) {
 
     return closest;
 };
-c3_chart_internal_fn.dist = function (data, pos) {
+data.dist = function (data, pos) {
     var $$ = this, config = $$.config,
         xIndex = config.axis_rotated ? 1 : 0,
         yIndex = config.axis_rotated ? 0 : 1,
@@ -335,7 +337,7 @@ c3_chart_internal_fn.dist = function (data, pos) {
         x = $$.x(data.x);
     return Math.sqrt(Math.pow(x - pos[xIndex], 2) + Math.pow(y - pos[yIndex], 2));
 };
-c3_chart_internal_fn.convertValuesToStep = function (values) {
+data.convertValuesToStep = function (values) {
     var converted = [].concat(values), i;
 
     if (!this.isCategorized()) {
@@ -359,7 +361,7 @@ c3_chart_internal_fn.convertValuesToStep = function (values) {
 
     return converted;
 };
-c3_chart_internal_fn.updateDataAttributes = function (name, attrs) {
+data.updateDataAttributes = function (name, attrs) {
     var $$ = this, config = $$.config, current = config['data_' + name];
     if (typeof attrs === 'undefined') { return current; }
     Object.keys(attrs).forEach(function (id) {
@@ -368,3 +370,5 @@ c3_chart_internal_fn.updateDataAttributes = function (name, attrs) {
     $$.redraw({withLegend: true});
     return current;
 };
+
+module.exports = data;

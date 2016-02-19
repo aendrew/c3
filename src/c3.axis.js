@@ -1,8 +1,11 @@
+// This file is weird.
+
 // Features:
 // 1. category axis
 // 2. ceil values of translate/x/y to int for half pixel antialiasing
 // 3. multiline tick text
 var tickTextCharSize;
+
 function c3_axis(d3, params) {
     var scale = d3.scale.linear(), orient = "bottom", innerTickSize = 6, outerTickSize, tickPadding = 3, tickValues = null, tickFormat, tickArguments;
 
@@ -328,3 +331,5 @@ function c3_axis(d3, params) {
     };
     return axis;
 }
+
+module.exports = c3_axis;

@@ -1,4 +1,7 @@
-c3_chart_internal_fn.getYFormat = function (forArc) {
+var format = {};
+var isValue = require('./util').isValue;
+
+format.getYFormat = function (forArc) {
     var $$ = this,
         formatForY = forArc && !$$.hasType('gauge') ? $$.defaultArcValueFormat : $$.yFormat,
         formatForY2 = forArc && !$$.hasType('gauge') ? $$.defaultArcValueFormat : $$.y2Format;
@@ -7,23 +10,23 @@ c3_chart_internal_fn.getYFormat = function (forArc) {
         return format.call($$, v, ratio);
     };
 };
-c3_chart_internal_fn.yFormat = function (v) {
+format.yFormat = function (v) {
     var $$ = this, config = $$.config,
         format = config.axis_y_tick_format ? config.axis_y_tick_format : $$.defaultValueFormat;
     return format(v);
 };
-c3_chart_internal_fn.y2Format = function (v) {
+format.y2Format = function (v) {
     var $$ = this, config = $$.config,
         format = config.axis_y2_tick_format ? config.axis_y2_tick_format : $$.defaultValueFormat;
     return format(v);
 };
-c3_chart_internal_fn.defaultValueFormat = function (v) {
+format.defaultValueFormat = function (v) {
     return isValue(v) ? +v : "";
 };
-c3_chart_internal_fn.defaultArcValueFormat = function (v, ratio) {
+format.defaultArcValueFormat = function (v, ratio) {
     return (ratio * 100).toFixed(1) + '%';
 };
-c3_chart_internal_fn.dataLabelFormat = function (targetId) {
+format.dataLabelFormat = function (targetId) {
     var $$ = this, data_labels = $$.config.data_labels,
         format, defaultFormat = function (v) { return isValue(v) ? +v : ""; };
     // find format according to axis id
@@ -40,3 +43,5 @@ c3_chart_internal_fn.dataLabelFormat = function (targetId) {
     }
     return format;
 };
+
+module.exports = format;
