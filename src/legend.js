@@ -1,4 +1,9 @@
 var legend = {};
+var CLASS = require('./class');
+var utils = require('./util');
+var isEmpty = utils.isEmpty;
+var isDefined = utils.isDefined;
+var getOption = utils.getOption;
 
 legend.initLegend = function () {
     var $$ = this;

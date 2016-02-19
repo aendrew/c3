@@ -1,4 +1,6 @@
 var region = {};
+var CLASS = require('./class');
+var isValue = require('./util').isValue;
 
 region.initRegion = function () {
     var $$ = this;

@@ -1,6 +1,4 @@
-var classes = {};
-
-var CLASS = classes.CLASS = {
+var CLASS = {
     target: 'c3-target',
     chart: 'c3-chart',
     chartLine: 'c3-chart-line',
@@ -77,103 +75,108 @@ var CLASS = classes.CLASS = {
     SELECTED: '_selected_',
     INCLUDED: '_included_'
 };
-classes.generateClass = function (prefix, targetId) {
+
+var config = require('./config');
+
+CLASS.generateClass = function (prefix, targetId) {
     return " " + prefix + " " + prefix + this.getTargetSelectorSuffix(targetId);
 };
-classes.classText = function (d) {
+CLASS.classText = function (d) {
     return this.generateClass(CLASS.text, d.index);
 };
-classes.classTexts = function (d) {
+CLASS.classTexts = function (d) {
     return this.generateClass(CLASS.texts, d.id);
 };
-classes.classShape = function (d) {
+CLASS.classShape = function (d) {
     return this.generateClass(CLASS.shape, d.index);
 };
-classes.classShapes = function (d) {
+CLASS.classShapes = function (d) {
     return this.generateClass(CLASS.shapes, d.id);
 };
-classes.classLine = function (d) {
+CLASS.classLine = function (d) {
     return this.classShape(d) + this.generateClass(CLASS.line, d.id);
 };
-classes.classLines = function (d) {
+CLASS.classLines = function (d) {
     return this.classShapes(d) + this.generateClass(CLASS.lines, d.id);
 };
-classes.classCircle = function (d) {
+CLASS.classCircle = function (d) {
     return this.classShape(d) + this.generateClass(CLASS.circle, d.index);
 };
-classes.classCircles = function (d) {
+CLASS.classCircles = function (d) {
     return this.classShapes(d) + this.generateClass(CLASS.circles, d.id);
 };
-classes.classBar = function (d) {
+CLASS.classBar = function (d) {
     return this.classShape(d) + this.generateClass(CLASS.bar, d.index);
 };
-classes.classBars = function (d) {
+CLASS.classBars = function (d) {
     return this.classShapes(d) + this.generateClass(CLASS.bars, d.id);
 };
-classes.classArc = function (d) {
+CLASS.classArc = function (d) {
     return this.classShape(d.data) + this.generateClass(CLASS.arc, d.data.id);
 };
-classes.classArcs = function (d) {
+CLASS.classArcs = function (d) {
     return this.classShapes(d.data) + this.generateClass(CLASS.arcs, d.data.id);
 };
-classes.classArea = function (d) {
+CLASS.classArea = function (d) {
     return this.classShape(d) + this.generateClass(CLASS.area, d.id);
 };
-classes.classAreas = function (d) {
+CLASS.classAreas = function (d) {
     return this.classShapes(d) + this.generateClass(CLASS.areas, d.id);
 };
-classes.classRegion = function (d, i) {
+CLASS.classRegion = function (d, i) {
     return this.generateClass(CLASS.region, i) + ' ' + ('class' in d ? d['class'] : '');
 };
-classes.classEvent = function (d) {
+CLASS.classEvent = function (d) {
     return this.generateClass(CLASS.eventRect, d.index);
 };
-classes.classTarget = function (id) {
+CLASS.classTarget = function (id) {
     var $$ = this;
+
+    // For some reason I've needed to rename this from $.config.data_CLASS to $$.config.data_classes. /shrug -Æ.
     var additionalClassSuffix = $$.config.data_classes[id], additionalClass = '';
     if (additionalClassSuffix) {
         additionalClass = ' ' + CLASS.target + '-' + additionalClassSuffix;
     }
     return $$.generateClass(CLASS.target, id) + additionalClass;
 };
-classes.classFocus = function (d) {
+CLASS.classFocus = function (d) {
     return this.classFocused(d) + this.classDefocused(d);
 };
-classes.classFocused = function (d) {
+CLASS.classFocused = function (d) {
     return ' ' + (this.focusedTargetIds.indexOf(d.id) >= 0 ? CLASS.focused : '');
 };
-classes.classDefocused = function (d) {
+CLASS.classDefocused = function (d) {
     return ' ' + (this.defocusedTargetIds.indexOf(d.id) >= 0 ? CLASS.defocused : '');
 };
-classes.classChartText = function (d) {
+CLASS.classChartText = function (d) {
     return CLASS.chartText + this.classTarget(d.id);
 };
-classes.classChartLine = function (d) {
+CLASS.classChartLine = function (d) {
     return CLASS.chartLine + this.classTarget(d.id);
 };
-classes.classChartBar = function (d) {
+CLASS.classChartBar = function (d) {
     return CLASS.chartBar + this.classTarget(d.id);
 };
-classes.classChartArc = function (d) {
+CLASS.classChartArc = function (d) {
     return CLASS.chartArc + this.classTarget(d.data.id);
 };
-classes.getTargetSelectorSuffix = function (targetId) {
+CLASS.getTargetSelectorSuffix = function (targetId) {
     return targetId || targetId === 0 ? ('-' + targetId).replace(/[\s?!@#$%^&*()_=+,.<>'":;\[\]\/|~`{}\\]/g, '-') : '';
 };
-classes.selectorTarget = function (id, prefix) {
+CLASS.selectorTarget = function (id, prefix) {
     return (prefix || '') + '.' + CLASS.target + this.getTargetSelectorSuffix(id);
 };
-classes.selectorTargets = function (ids, prefix) {
+CLASS.selectorTargets = function (ids, prefix) {
     var $$ = this;
     ids = ids || [];
     return ids.length ? ids.map(function (id) { return $$.selectorTarget(id, prefix); }) : null;
 };
-classes.selectorLegend = function (id) {
+CLASS.selectorLegend = function (id) {
     return '.' + CLASS.legendItem + this.getTargetSelectorSuffix(id);
 };
-classes.selectorLegends = function (ids) {
+CLASS.selectorLegends = function (ids) {
     var $$ = this;
     return ids && ids.length ? ids.map(function (id) { return $$.selectorLegend(id); }) : null;
 };
 
-module.exports = classes;
+module.exports = CLASS;

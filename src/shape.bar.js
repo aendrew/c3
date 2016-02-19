@@ -1,4 +1,6 @@
 var shapeBar = {};
+var CLASS = require('./class');
+var isValue = require('./util').isValue;
 
 shapeBar.initBar = function () {
     var $$ = this;

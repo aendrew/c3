@@ -1,4 +1,10 @@
 var shapeLine = {};
+var CLASS = require('./class');
+var utils = require('./util');
+var isDefined = utils.isDefined;
+var isUndefined = utils.isUndefined;
+var isValue = utils.isValue;
+var isFunction = utils.isFunction;
 
 shapeLine.initLine = function () {
     var $$ = this;

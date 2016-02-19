@@ -1,4 +1,9 @@
 var dataConvert = {};
+var utils = require('./util');
+var isUndefined = utils.isUndefined;
+var isValue = utils.isValue;
+var notEmpty = utils.notEmpty;
+var isDefined = utils.isDefined;
 
 dataConvert.convertUrlToData = function (url, mimeType, keys, done) {
     var $$ = this, type = mimeType ? mimeType : 'csv';

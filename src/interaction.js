@@ -1,4 +1,5 @@
 var interaction = {};
+var CLASS = require('./class');
 
 interaction.initEventRect = function () {
     var $$ = this;

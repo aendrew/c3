@@ -1,4 +1,5 @@
 var dataLoad = {};
+var CLASS = require('./class');
 
 dataLoad.load = function (targets, args) {
     var $$ = this;

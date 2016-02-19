@@ -999,4 +999,4 @@ core.isTabVisible = function () {
     return document[hidden] ? false : true;
 };
 
-module.export = core;
+module.exports = core;

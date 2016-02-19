@@ -1,4 +1,6 @@
 var drag = {};
+var CLASS = require('./class');
+var getPathBox = require('./util').getPathBox;
 
 drag.drag = function (mouse) {
     var $$ = this, config = $$.config, main = $$.main, d3 = $$.d3;

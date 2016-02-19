@@ -1,4 +1,8 @@
 var size = {};
+var utils = require('./util');
+var isValue = utils.isValue;
+var ceil10 = utils.ceil10;
+var CLASS = require('./class');
 
 size.getCurrentWidth = function () {
     var $$ = this, config = $$.config;
@@ -13,9 +17,12 @@ size.getCurrentPaddingTop = function () {
     var $$ = this,
         config = $$.config,
         padding = isValue(config.padding_top) ? config.padding_top : 0;
-    if ($$.title && $$.title.node()) {
-        padding += $$.getTitlePadding();
-    }
+
+    // Temporarily disabling titles because it was causing problems -Æ.
+
+    // if ($$.title && $$.title.node()) {
+    //     padding += $$.getTitlePadding();
+    // }
     return padding;
 };
 size.getCurrentPaddingBottom = function () {

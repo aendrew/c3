@@ -1,4 +1,5 @@
 var selection = {};
+var CLASS = require('./class');
 
 selection.selectPoint = function (target, d, i) {
     var $$ = this, config = $$.config,

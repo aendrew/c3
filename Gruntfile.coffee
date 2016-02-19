@@ -1,10 +1,12 @@
+path = require('path')
+
 module.exports = (grunt) ->
-    require('load-grunt-tasks') grunt, pattern: ['grunt-contrib-*', 'grunt-sass', 'grunt-karma']
+    require('load-grunt-tasks') grunt, pattern: ['grunt-contrib-*', 'grunt-sass', 'grunt-karma', 'grunt-webpack']
 
     grunt.initConfig
         watch:
           concat:
-            tasks: 'concat'
+            tasks: ['webpack', 'concat']
             files: ['src/*.js']
           sass:
             tasks: 'sass'
@@ -12,15 +14,9 @@ module.exports = (grunt) ->
 
         concat:
           dist:
-            options:
-              process: (src, filepath) ->
-                if filepath != 'src/head.js' && filepath != 'src/tail.js'
-                  lines = []
-                  src.split('\n').forEach (line) ->
-                    lines.push( (if line.length > 0 then '    ' else '') + line)
-                  src = lines.join('\n')
-                return src
             src: [
+            #   THESE ARE NOW ALL LOADED VIA MODULES WITH WEBPACK!!!
+            #
             #   'src/head.js',
             #   'src/core.js',
             #   'src/config.js',
@@ -74,9 +70,10 @@ module.exports = (grunt) ->
             #   'src/api.tooltip.js',
             #   'src/c3.axis.js',
             #   'src/ua.js',
-              'src/index.js',
-              'src/polyfill.js'
+            #   'src/index.js',
             #   'src/tail.js'
+              'src/polyfill.js',
+              './c3.js'
             ]
             dest: 'c3.js'
 
@@ -107,8 +104,21 @@ module.exports = (grunt) ->
             files:
               'c3.css': 'src/scss/main.scss'
 
+        webpack:
+          c3:
+            dest: 'c3.js'
+          options:
+            entry:
+              app: ['./src/index.js']
+              output:
+                path: path.resolve(__dirname, './src/')
+                filename: 'c3.js'
+                libraryTarget: 'umd'
+                umdNamedDefine: 'c3'
+            devtool: 'inline-source-map'
+
     grunt.registerTask 'lint', ['jshint']
     grunt.registerTask 'test', ['karma']
-    grunt.registerTask 'build', ['concat', 'sass']
+    grunt.registerTask 'build', ['webpack', 'concat', 'sass']
     grunt.registerTask 'minify', ['cssmin', 'uglify']
     grunt.registerTask 'default', ['lint', 'build', 'test', 'minify']

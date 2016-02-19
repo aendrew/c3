@@ -27,6 +27,15 @@
   },
   "devDependencies": {
     "codecov.io": "^0.1.6",
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "~0.5.0",
+    "grunt-contrib-cssmin": "^0.10.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-karma": "^0.12.1",
+    "grunt-sass": "^1.0.0",
+    "grunt-webpack": "^1.0.11",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.10",
     "karma-coverage": "^0.5.2",
@@ -34,7 +43,7 @@
     "karma-phantomjs-launcher": "^0.2.1",
     "karma-spec-reporter": "0.0.20",
     "phantomjs": "^1.9.18",
-    "webpack": "^1.12.9",
-    "webpack-dev-server": "^1.14.0"
+    "webpack": "^1.12.13",
+    "webpack-dev-server": "^1.14.1"
   }
 }

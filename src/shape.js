@@ -1,4 +1,8 @@
-c3_chart_internal_fn.getShapeIndices = function (typeFilter) {
+var shape = {};
+var isUndefined = require('./util').isUndefined;
+var CLASS = require('./class');
+
+shape.getShapeIndices = function (typeFilter) {
     var $$ = this, config = $$.config,
         indices = {}, i = 0, j, k;
     $$.filterTargetsToShow($$.data.targets.filter(typeFilter, $$)).forEach(function (d) {
@@ -16,21 +20,21 @@ c3_chart_internal_fn.getShapeIndices = function (typeFilter) {
     indices.__max__ = i - 1;
     return indices;
 };
-c3_chart_internal_fn.getShapeX = function (offset, targetsNum, indices, isSub) {
+shape.getShapeX = function (offset, targetsNum, indices, isSub) {
     var $$ = this, scale = isSub ? $$.subX : $$.x;
     return function (d) {
         var index = d.id in indices ? indices[d.id] : 0;
         return d.x || d.x === 0 ? scale(d.x) - offset * (targetsNum / 2 - index) : 0;
     };
 };
-c3_chart_internal_fn.getShapeY = function (isSub) {
+shape.getShapeY = function (isSub) {
     var $$ = this;
     return function (d) {
         var scale = isSub ? $$.getSubYScale(d.id) : $$.getYScale(d.id);
         return scale(d.value);
     };
 };
-c3_chart_internal_fn.getShapeOffset = function (typeFilter, indices, isSub) {
+shape.getShapeOffset = function (typeFilter, indices, isSub) {
     var $$ = this,
         targets = $$.orderTargets($$.filterTargetsToShow($$.data.targets.filter(typeFilter, $$))),
         targetIds = targets.map(function (t) { return t.id; });
@@ -59,7 +63,7 @@ c3_chart_internal_fn.getShapeOffset = function (typeFilter, indices, isSub) {
         return offset;
     };
 };
-c3_chart_internal_fn.isWithinShape = function (that, d) {
+shape.isWithinShape = function (that, d) {
     var $$ = this,
         shape = $$.d3.select(that), isWithin;
     if (!$$.isTargetToShow(d.id)) {
@@ -75,8 +79,10 @@ c3_chart_internal_fn.isWithinShape = function (that, d) {
 };
 
 
-c3_chart_internal_fn.getInterpolate = function (d) {
+shape.getInterpolate = function (d) {
     var $$ = this,
         interpolation = $$.isInterpolationType($$.config.spline_interpolation_type) ? $$.config.spline_interpolation_type : 'cardinal';
     return $$.isSplineType(d) ? interpolation : $$.isStepType(d) ? $$.config.line_step_type : "linear";
 };
+
+module.exports = shape;

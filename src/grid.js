@@ -1,4 +1,6 @@
 var grid = {};
+var CLASS = require('./class');
+var isValue = require('./util').isValue;
 
 grid.initGrid = function () {
     var $$ = this, config = $$.config, d3 = $$.d3;

@@ -1,4 +1,9 @@
 var domain = {};
+var utils = require('./util');
+var isValue = utils.isValue;
+var diffDomain = utils.diffDomain;
+var notEmpty = utils.notEmpty;
+var isDefined = utils.isDefined;
 
 domain.getYDomainMin = function (targets) {
     var $$ = this, config = $$.config,

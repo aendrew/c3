@@ -1,4 +1,10 @@
 var data = {};
+var utils = require('./util');
+var notEmpty = utils.notEmpty;
+var hasValue = utils.hasValue;
+var isFunction = utils.isFunction;
+var isValue = utils.isValue;
+var CLASS = require('./class');
 
 data.isX = function (key) {
     var $$ = this, config = $$.config;
