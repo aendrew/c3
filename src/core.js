@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import d3 from 'd3';
 import Axis from './axis';
 import CLASS from './class';
 import { isValue, isFunction, isString, isUndefined, isDefined, ceil10, asHalfPixel, diffDomain, isEmpty, notEmpty, getOption, hasValue, sanitise, getPathBox } from './util';
